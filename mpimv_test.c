@@ -17,8 +17,8 @@
 #define NITERS 10
 #define STRLEN 100
 
-void mpiinput2triple(int p, int s, int *pnA, int *pnz, int **pia, int **pja,
-                     double **pa) {
+void mpiinput2triple(int p, int s, const char *filename, int *pnA, int *pnz,
+                     int **pia, int **pja, double **pa) {
 
   /* This function reads a sparse matrix in distributed
      Matrix Market format without the banner line
@@ -56,15 +56,11 @@ void mpiinput2triple(int p, int s, int *pnA, int *pnz, int **pia, int **pja,
 
   int pA, mA, nA, nzA, nz, q, maxnz, k, *Nz, *Pstart, *ia, *ja, *ib, *jb;
   double *a, *b;
-  char filename[STRLEN];
   FILE *fp;
 
   MPI_Status status, status1, status2;
 
   if (s == 0) {
-    /* Open the matrix file and read the header */
-    printf("Please enter the filename of the matrix distribution\n");
-    scanf("%s", filename);
     fp = fopen(filename, "r");
 
     /* A is an mA by nA matrix with nzA nonzeros
@@ -544,8 +540,8 @@ void mpiinputvec(int p, int s, const char *filename, int *pn, int *pnv,
 
 int main(int argc, char **argv) {
 
-  void mpiinput2triple(int p, int s, int *pnA, int *pnz, int **pia, int **pja,
-                       double **pa);
+  void mpiinput2triple(int p, int s, const char *filename, int *pnA, int *pnz,
+                       int **pia, int **pja, double **pa);
   void triple2icrs(int n, int nz, int *ia, int *ja, double *a, int *pnrows,
                    int *pncols, int **prowindex, int **pcolindex);
   void mpiinputvec(int p, int s, const char *filename, int *pn, int *pnv,
@@ -560,15 +556,20 @@ int main(int argc, char **argv) {
   int s, p, n, nz, i, iglob, nrows, ncols, nv, nu, iter, *ia, *ja, *rowindex,
       *colindex, *vindex, *uindex, *srcprocv, *srcindv, *destprocu, *destindu;
   double *a, *v, *u, time0, time1, time2;
-  char vfilename[STRLEN], ufilename[STRLEN];
+  char mfilename[STRLEN], vfilename[STRLEN], ufilename[STRLEN];
 
   MPI_Init(&argc, &argv);
 
   MPI_Comm_size(MPI_COMM_WORLD, &p); /* p = number of processors */
   MPI_Comm_rank(MPI_COMM_WORLD, &s); /* s = processor number */
 
+  /* Open the matrix file and read the header */
+  if (s == 0) {
+    printf("Please enter the filename of the matrix distribution\n");
+    scanf("%s", mfilename);
+  }
   /* Input of sparse matrix */
-  mpiinput2triple(p, s, &n, &nz, &ia, &ja, &a);
+  mpiinput2triple(p, s, mfilename, &n, &nz, &ia, &ja, &a);
 
   /* Convert data structure to incremental compressed row storage */
   triple2icrs(n, nz, ia, ja, a, &nrows, &ncols, &rowindex, &colindex);
