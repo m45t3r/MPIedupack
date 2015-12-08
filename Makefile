@@ -1,6 +1,6 @@
-CC=cc
+CC=mpicc
 CFLAGS= -O3
-LFLAGS= -lm -lmpi
+LFLAGS= -lm
 OBJIP= mpiinprod.o mpiedupack.o
 OBJBEN= mpibench.o mpiedupack.o
 OBJLU= mpilu_test.o mpilu.o mpiedupack.o
