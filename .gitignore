@@ -1,0 +1,6 @@
+*.o
+bench
+fft
+lu
+ip
+matvec
