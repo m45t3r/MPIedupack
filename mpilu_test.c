@@ -92,20 +92,20 @@ int main(int argc, char **argv) {
   if (s == 0 && t == 0) {
     printf("End of LU decomposition\n");
     printf("This took only %.6lf seconds.\n", time1 - time0);
-    printf("\nThe output permutation is:\n");
     fflush(stdout);
   }
 
+  /* printf("\nThe output permutation is:\n");
   if (t == 0) {
     for (i = 0; i < nlr; i++) {
       iglob = i * M + s;
       printf("i=%d, pi=%d, proc=(%d,%d)\n", iglob, pi[i], s, t);
     }
     fflush(stdout);
-  }
+  } */
   MPI_Barrier(MPI_COMM_WORLD);
 
-  if (s == 0 && t == 0) {
+  /* if (s == 0 && t == 0) {
     printf("\nThe output matrix is:\n");
     fflush(stdout);
   }
@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
       jglob = j * N + t;
       printf("i=%d, j=%d, a=%f, proc=(%d,%d)\n", iglob, jglob, a[i][j], s, t);
     }
-  }
+  } */
 
   vecfreei(pi);
   matfreed(a);
