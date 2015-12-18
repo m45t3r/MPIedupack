@@ -14,7 +14,7 @@
 
 #define DIV 0
 #define MOD 1
-#define NITERS 10
+#define NITERS 1000
 #define STRLEN 100
 
 void mpiinput2triple(int p, int s, const char *filename, int *pnA, int *pnz,
@@ -632,14 +632,16 @@ int main(int argc, char **argv) {
     printf("Initialization took only %.6lf seconds.\n", time1 - time0);
     printf("Each matvec took only %.6lf seconds.\n",
            (time2 - time1) / (double)NITERS);
-    printf("The computed solution is:\n");
+    printf("Total time for %d iterations: %.6lf\n", (int)NITERS,
+           (time2 - time1));
     fflush(stdout);
   }
 
+  /* printf("The computed solution is:\n");
   for (i = 0; i < nu; i++) {
     iglob = uindex[i];
     printf("proc=%d i=%d, u=%lf \n", s, iglob, u[i]);
-  }
+  } */
 
   vecfreei(destindu);
   vecfreei(destprocu);
